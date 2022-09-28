@@ -2,7 +2,6 @@
 #include <Preferences.h>
 #include <WiFi.h>
 
-
 #define Max_YD_Message_Size 500
 char YD_msg[Max_YD_Message_Size] = "";
 
@@ -16,9 +15,6 @@ const char* ssidPass  = "J&TTroyer";            // Password for wifi
 // UPD broadcast to SignalK server
 const char* udpAddress = "192.168.1.255"; // UDP (broadcast) address. Should be the SignalK server or .255 for all
 const int udpPort = 4444;                  // YD UDP port
-
-
-
 
 double t = 0;  // Time
 int page = 0;  // Initial page to show

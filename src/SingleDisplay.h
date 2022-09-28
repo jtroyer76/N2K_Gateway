@@ -1,9 +1,11 @@
 #ifndef _SingleDisplay_H_
 #define _SingleDisplay_H_
 
+#include "Display.h"
+
 #include <Arduino.h>
 
-class SingleDisplay
+class SingleDisplay : public Display
 {
     public:
         SingleDisplay(String name, String units,  double &value);

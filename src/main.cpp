@@ -31,8 +31,9 @@
 #include "N2kGateway.h"
 #include "functions.h"
 #include "SingleDisplay.h"
+#include "DisplayController.h"
 
-SingleDisplay depth("Depth", "Feet", BoatData.WaterDepth);
+DisplayController displayController;
 
 //*****************************************************************************
 void setup() {  
@@ -102,10 +103,10 @@ void setup() {
   NMEA2000.Open();
 
   //Display_Main();
-
-  
-  depth.Show();
-
+  displayController.AddDisplay(new SingleDisplay("Depth", "Feet", BoatData.WaterDepth));
+  displayController.AddDisplay(new SingleDisplay("Speed", "Kts", BoatData.STW));
+  displayController.AddDisplay(new SingleDisplay("SOG", "Kts", BoatData.SOG));
+  displayController.Show();
 }
 
 void loop() {
@@ -120,47 +121,19 @@ void loop() {
 
   M5.update();
 
-
-
   if (millis() > t + 1000) {
     t = millis();
 
-    depth.Update();
-    // if (page == 0) Page_1();
-    // if (page == 1) Page_2();
-    // if (page == 2) Page_3();
-    // if (page == 3) Page_4();
-    // if (page == 4) Page_5();
-
-    //set_system_time();
-    //DisplayDateTime();
+    displayController.Update();
   }
 
-
-  if (M5.BtnB.wasPressed() == true) {
-    page++;                        // Button B pressed -> Next page
-    if (page > pages) page = 0;
-    t -= 1000;
-  }
-
-
-  if (M5.BtnA.wasPressed() == true) {
-    page--;
-    if (page < 0) page = pages;
-    t -= 1000;
-  }
-
-  if (M5.BtnC.wasPressed() == true)                         /* Button C pressed ? --> Change brightness */
+  if (M5.BtnA.wasPressed() == true)
   {
-    //      M5.Speaker.tone(NOTE_DH2, 1);
-    if (LCD_Brightness < 250)                               /* Maximum brightness not reached ? */
-    {
-      LCD_Brightness = LCD_Brightness + 10;                 /* Increase brightness */
-    }
-    else                                                    /* Maximum brightness reached ? */
-    {
-      LCD_Brightness = 10;                                  /* Set brightness to lowest value */
-    }
-    M5.Lcd.setBrightness(LCD_Brightness);                   /* Change brightness value */
+    displayController.PreviousScreen();
+  }
+
+  if (M5.BtnC.wasPressed() == true)
+  {
+    displayController.NextScreen();
   }
 }
