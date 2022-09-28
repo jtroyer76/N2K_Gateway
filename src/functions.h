@@ -60,8 +60,8 @@ void HandleSpeed(const tN2kMsg &n2kMsg)
   tN2kSpeedWaterReferenceType swrt;
 
   if(ParseN2kBoatSpeed(n2kMsg, SID, stw, sog, swrt)) {
-    BoatData.STW = stw;
-    BoatData.SOG = sog;
+    BoatData.STW = stw * 1.94384;
+    BoatData.SOG = sog * 1.94384;
   }
 }
 

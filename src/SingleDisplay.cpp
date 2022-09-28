@@ -8,7 +8,7 @@
 // Display header locations
 #define NAME_X 10
 #define NAME_Y 10
-#define UNIT_X 260
+#define UNIT_X 270
 #define UNIT_Y 10
 
 // Canvas size

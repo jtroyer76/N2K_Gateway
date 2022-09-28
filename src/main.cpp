@@ -103,9 +103,9 @@ void setup() {
   NMEA2000.Open();
 
   //Display_Main();
-  displayController.AddDisplay(new SingleDisplay("Depth", "Feet", BoatData.WaterDepth));
-  displayController.AddDisplay(new SingleDisplay("Speed", "Kts", BoatData.STW));
-  displayController.AddDisplay(new SingleDisplay("SOG", "Kts", BoatData.SOG));
+  displayController.AddDisplay(new SingleDisplay("Depth", "Ft", BoatData.WaterDepth));
+  displayController.AddDisplay(new SingleDisplay("Speed", "Kn", BoatData.STW));
+  displayController.AddDisplay(new SingleDisplay("SOG", "Kn", BoatData.SOG));
   displayController.Show();
 }
 
@@ -127,13 +127,11 @@ void loop() {
     displayController.Update();
   }
 
-  if (M5.BtnA.wasPressed() == true)
-  {
+  if (M5.BtnA.wasPressed() == true) {
     displayController.PreviousScreen();
   }
 
-  if (M5.BtnC.wasPressed() == true)
-  {
+  if (M5.BtnC.wasPressed() == true) {
     displayController.NextScreen();
   }
 }
