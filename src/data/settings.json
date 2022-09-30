@@ -1,0 +1,11 @@
+{
+    "test" : "winner",
+    "status": {
+        "ip" : "192.168.1.100"
+    },
+
+    "wifi": {
+        "ssid" : "bitfu2",
+        "password" : "J&TTroyer"
+    }
+}

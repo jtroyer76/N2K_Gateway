@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Boat Gateway</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -41,28 +41,28 @@
 
     <script>
         const tabBtn = document.querySelectorAll(".tab");
-        const tab =  document.querySelectorAll(".tabShow");
+        const tab = document.querySelectorAll(".tabShow");
 
         function tabs(panelIndex) {
-            tab.forEach(function(node) {
-                node.style.display = "none";
-            });
+            tab.forEach(el => el.style.display = "none");            
             tab[panelIndex].style.display = "block";
         }
 
-        const tabCol = document.querySelectorAll('.tab');
-        tabCol.forEach(el => el.addEventListener('click', event => {
+        async function loadSettings() {
+            const response = await fetch('settings.json');
+            const settings = await response.json();            
+
+            document.getElementById('ipaddress').innerHTML = settings.status.ip;
+            document.getElementById('ssid').value = "bitfu2";
+        }
+
+        tabBtn.forEach(el => el.addEventListener('click', () => {
             [...el.parentElement.children].forEach(sib => sib.classList.remove('active'))
             el.classList.add('active');            
         }))
 
-        function loadSettings() {
-            document.getElementById('ipaddress').innerHTML = "192.168.1.55";
-            document.getElementById('ssid').value = "bitfu2";
-        }
-
         tabs(0);
-        loadSettings();        
+        loadSettings();
     </script>
 </body>
 
