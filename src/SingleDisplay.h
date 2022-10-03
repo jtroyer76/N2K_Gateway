@@ -3,18 +3,18 @@
 
 #include "Display.h"
 
-#include <Arduino.h>
+#include <string>
 
 class SingleDisplay : public Display
 {
     public:
-        SingleDisplay(String name, String units,  double &value);
+        SingleDisplay(std::string name, std::string units,  double &value);
         void Show();
         void Update();
 
     private:
-      String name_;
-      String units_;
+      std::string name_;
+      std::string units_;
       double &value_;
 };
 

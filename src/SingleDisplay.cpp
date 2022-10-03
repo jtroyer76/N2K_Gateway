@@ -36,7 +36,7 @@
 #define TENTHS_X 240
 #define TENTHS_Y 85
 
-SingleDisplay::SingleDisplay(String name, String units, double &value) : value_(value)
+SingleDisplay::SingleDisplay(std::string name, std::string units, double &value) : value_(value)
 {
     name_ = name;
     units_ = units;
@@ -48,15 +48,15 @@ void SingleDisplay::Show()
     M5.Lcd.clear();
     M5.Lcd.setTextColor(TFT_WHITE);
     M5.Lcd.setFreeFont(FSSB12);
-    M5.Lcd.drawString(name_, NAME_X, NAME_Y);
-    M5.Lcd.drawString(units_, UNIT_X, UNIT_Y);
+    M5.Lcd.drawString(name_.c_str(), NAME_X, NAME_Y);
+    M5.Lcd.drawString(units_.c_str(), UNIT_X, UNIT_Y);
 
     Update();
 }
 
 void SingleDisplay::Update()
 {
-    // Split integral and decimal portions
+    // Split integer and decimal portions
     char buf[8];
     int num, dec;
     sprintf(buf, "%.1f", value_);
