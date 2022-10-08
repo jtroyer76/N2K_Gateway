@@ -1,3 +1,6 @@
+#pragma once
+
+char default_config[] = R"(
 {
     "wifi" : {
         "ssid": "bitfu2",
@@ -19,3 +22,4 @@
         }
     ]
 }
+)";
