@@ -12,7 +12,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// NMEA2000 Gateway
+// N2k Gateway
 // Version 0.0.1, 9/19/2022, Jess Troyer
 
 // Port A - Red
@@ -20,7 +20,7 @@
 #define ESP32_CAN_RX_PIN GPIO_NUM_33
 
 #include <Arduino.h>
-#include <NMEA2000_CAN.h>   // This will automatically choose right CAN library and create suitable NMEA2000 object
+#include <NMEA2000_CAN.h> // This will automatically choose right CAN library and create suitable NMEA2000 object
 #include <N2kMessages.h>
 #include <Preferences.h>
 
@@ -30,13 +30,19 @@
 
 #include "N2kGateway.h"
 #include "functions.h"
-#include "SingleDisplay.h"
-#include "DisplayController.h"
+#include "Display\SingleDisplay.h"
+#include "Display\DisplayController.h"
+#include "Settings.h"
 
-DisplayController displayController;
+using N2kGateway::DisplayController;
+using N2kGateway::SingleDisplay;
+
+std::unique_ptr<Settings> settings { new Settings() };
+DisplayController displayController(*settings);
 
 //*****************************************************************************
-void setup() {  
+void setup()
+{
   uint8_t chipid[6];
   uint32_t id = 0;
   int i = 0;
@@ -51,11 +57,13 @@ void setup() {
   WiFi.begin(ssid, ssidPass);
   WiFi.setHostname("NMEA2000-Gateway");
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
     i++;
-    if (i > 20 ) ESP.restart();
+    if (i > 20)
+      ESP.restart();
   }
 
   IPAddress IP = WiFi.localIP();
@@ -70,68 +78,73 @@ void setup() {
 
   // Generate unique number from chip id
   esp_efuse_mac_get_default(chipid);
-  for (i = 0; i < 6; i++) id += (chipid[i] << (7 * i));
+  for (i = 0; i < 6; i++)
+    id += (chipid[i] << (7 * i));
 
   // Set product information
-  NMEA2000.SetProductInformation("1", // Manufacturer's Model serial code
-                                 100, // Manufacturer's product code
-                                 "NMEA Reader",  // Manufacturer's Model ID
-                                 "1.0.2.25 (2019-07-07)",  // Manufacturer's Software version code
-                                 "1.0.2.0 (2019-07-07)" // Manufacturer's Model version
-                                );
+  NMEA2000.SetProductInformation("1",                     // Manufacturer's Model serial code
+                                 100,                     // Manufacturer's product code
+                                 "NMEA Reader",           // Manufacturer's Model ID
+                                 "1.0.2.25 (2019-07-07)", // Manufacturer's Software version code
+                                 "1.0.2.0 (2019-07-07)"   // Manufacturer's Model version
+  );
 
   // Set device information
   NMEA2000.SetDeviceInformation(id,  // Unique number. Use e.g. Serial number.
                                 131, // Device function=NMEA 2000 to Analog Gateway. See codes on http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
                                 25,  // Device class=Inter/Intranetwork Device. See codes on  http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
                                 2046 // Just choosen free from code list on http://www.nmea.org/Assets/20121020%20nmea%202000%20registration%20list.pdf
-                               );
+  );
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
   NMEA2000.SetForwardStream(&Serial);
   NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
 
-  preferences.begin("nvs", false);                          // Open nonvolatile storage (nvs)
-  NodeAddress = preferences.getInt("LastNodeAddress", 34);  // Read stored last NodeAddress, default 34
+  preferences.begin("nvs", false);                         // Open nonvolatile storage (nvs)
+  NodeAddress = preferences.getInt("LastNodeAddress", 34); // Read stored last NodeAddress, default 34
   preferences.end();
   Serial.printf("NodeAddress=%d\n", NodeAddress);
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
   NMEA2000.SetMode(tNMEA2000::N2km_ListenOnly, NodeAddress);
   NMEA2000.SetMsgHandler(MyHandleNMEA2000Msg);
- 
+
   NMEA2000.Open();
 
-  //Display_Main();
+  // Display_Main();
   displayController.AddDisplay(new SingleDisplay("Depth", "Ft", BoatData.WaterDepth));
   displayController.AddDisplay(new SingleDisplay("Speed", "Kn", BoatData.STW));
   displayController.AddDisplay(new SingleDisplay("SOG", "Kn", BoatData.SOG));
   displayController.Show();
 }
 
-void loop() {
-  
+void loop()
+{  
   NMEA2000.ParseMessages();
   CheckSourceAddressChange();
 
   // Dummy to empty input buffer to avoid board to stuck with e.g. NMEA Reader
-  if ( Serial.available() ) {
+  if (Serial.available())
+  {
     Serial.read();
   }
 
   M5.update();
 
-  if (millis() > t + 1000) {
+  if (millis() > t + 1000)
+  {
     t = millis();
 
     displayController.Update();
   }
 
-  if (M5.BtnA.wasPressed() == true) {
+  if (M5.BtnA.wasPressed() == true)
+  {
     displayController.PreviousScreen();
   }
 
-  if (M5.BtnC.wasPressed() == true) {
+  if (M5.BtnC.wasPressed() == true)
+  {
     displayController.NextScreen();
   }
 }
