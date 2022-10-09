@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Display.h"
-#include "Settings.h"
+#include "config\Configuration.h"
 
 #include <vector>
 
@@ -11,12 +11,12 @@ namespace N2kGateway
 
     class DisplayController
     {
-        const Settings &_settings;
-        vector<Display *> _screens{};
+        const Configuration &_config;
+        vector<Display *> _screens;
         vector<Display *>::size_type _currentScreen;
 
     public:
-        DisplayController(const Settings &settings);
+        DisplayController(const Configuration &config);
         void Show();
         void Update();
         void AddDisplay(Display *display);

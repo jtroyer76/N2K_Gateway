@@ -2,8 +2,8 @@
 
 namespace N2kGateway
 {
-    DisplayController::DisplayController(const Settings &settings) : _currentScreen(0),
-                                                                     _settings(settings) {}
+    DisplayController::DisplayController(const Configuration &config) : _currentScreen(0),
+                                                                        _config(config) {}
 
     void DisplayController::AddDisplay(Display *display)
     {

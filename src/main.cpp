@@ -23,6 +23,7 @@
 #include <NMEA2000_CAN.h> // This will automatically choose right CAN library and create suitable NMEA2000 object
 #include <N2kMessages.h>
 #include <Preferences.h>
+#include "LittleFS.h"
 
 #include <M5Core2.h>
 #include <time.h>
@@ -30,15 +31,18 @@
 
 #include "N2kGateway.h"
 #include "functions.h"
-#include "Display\SingleDisplay.h"
-#include "Display\DisplayController.h"
-#include "Settings.h"
+#include "display\SingleDisplay.h"
+#include "display\DisplayController.h"
+#include "config\Configuration.h"
+#include "server\Server.h"
 
 using N2kGateway::DisplayController;
 using N2kGateway::SingleDisplay;
+using N2kGateway::Configuration;
 
-std::unique_ptr<Settings> settings { new Settings() };
-DisplayController displayController(*settings);
+std::unique_ptr<Configuration> config { new Configuration() };
+DisplayController displayController(*config);
+N2kGateway::Server server(*config);
 
 //*****************************************************************************
 void setup()
@@ -51,6 +55,11 @@ void setup()
   // Init USB serial port
   Serial.begin(115200);
   delay(10);
+
+  if(!LittleFS.begin()){
+    Serial.println("An Error has occurred while mounting LittleFS");
+    return;
+  }
 
   // Init WiFi connection
   Serial.println("Start WLAN");
@@ -111,11 +120,12 @@ void setup()
 
   NMEA2000.Open();
 
-  // Display_Main();
   displayController.AddDisplay(new SingleDisplay("Depth", "Ft", BoatData.WaterDepth));
   displayController.AddDisplay(new SingleDisplay("Speed", "Kn", BoatData.STW));
   displayController.AddDisplay(new SingleDisplay("SOG", "Kn", BoatData.SOG));
   displayController.Show();
+
+  server.Begin();
 }
 
 void loop()
