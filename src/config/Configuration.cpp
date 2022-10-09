@@ -19,24 +19,29 @@ namespace N2kGateway
         }
     }
 
-    const JsonDocument &Configuration::Config()
+    const JsonDocument &Configuration::Config() const
     {
         return *_config;
     }
+
+    void Configuration::Update(string json, CategoryType category)
+    {
+
+    }          
 
     void Configuration::Save()
     {
     }
 
-    void Configuration::NotifyUpdate(vector<ConfigCategory> categories)
+    void Configuration::NotifyUpdate(CategoryType category)
     {
-        for(void (*callback)(vector<ConfigCategory>) : _listeners)
+        for(void (*callback)(CategoryType) : _listeners)
         {
-            callback(categories);
+            callback(category);
         }
     }
 
-    void Configuration::RegisterListener(void (*callback)(vector<ConfigCategory>))
+    void Configuration::RegisterListener(void (*callback)(CategoryType))
     {
         _listeners.push_back(callback);
     }

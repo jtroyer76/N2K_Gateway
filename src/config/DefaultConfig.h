@@ -1,25 +1,28 @@
 #pragma once
 
-char default_config[] = R"(
+namespace N2kGateway
 {
-    "wifi" : {
-        "ssid": "bitfu2",
-        "password": "J&TTroyer"
-    },
-    "display" : [
-        {
-            "type" : "SingleUnit",
-            "data" : "depth",
-            "unit" : "feet"
+    char default_config[] = R"(
+    {
+        "wifi" : {
+            "ssid": "bitfu2",
+            "password": "J&TTroyer"
         },
-        {
-            "type" : "SingleUnit",
-            "data" : "tws",
-            "unit" : "knots"
-        },
-        {
-            "type" : "Status"
-        }
-    ]
+        "display" : [
+            {
+                "type" : "SingleUnit",
+                "data" : "depth",
+                "unit" : "feet"
+            },
+            {
+                "type" : "SingleUnit",
+                "data" : "tws",
+                "unit" : "knots"
+            },
+            {
+                "type" : "Status"
+            }
+        ]
+    }
+    )";
 }
-)";
