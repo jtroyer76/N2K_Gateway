@@ -106,8 +106,8 @@ void setup()
   );
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
-  NMEA2000.SetForwardStream(&Serial);
-  NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
+  //NMEA2000.SetForwardStream(&Serial);
+  //NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
 
   preferences.begin("nvs", false);                         // Open nonvolatile storage (nvs)
   NodeAddress = preferences.getInt("LastNodeAddress", 34); // Read stored last NodeAddress, default 34

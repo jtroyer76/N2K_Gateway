@@ -7,7 +7,7 @@ namespace N2kGateway
     {
         _config = new StaticJsonDocument<1000>();
 
-        // Deserialize the JSON document
+        // Load the default config
         DeserializationError error = deserializeJson(*_config, default_config);
 
         // Test if parsing succeeds.

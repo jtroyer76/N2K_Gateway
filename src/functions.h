@@ -10,8 +10,6 @@ void HandleSytemTime(const tN2kMsg & N2kMsg) {
 
   ParseN2kSystemTime(N2kMsg, SID, DaysSince1970, SecondsSinceMidnight,
                      TimeSource);
-
- Serial.println("Got System Time");
 }
 
 
