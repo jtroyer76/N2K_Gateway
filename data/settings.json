@@ -5,17 +5,19 @@
     },
     "display" : [
         {
-            "type" : "SingleUnit",
-            "data" : "depth",
-            "unit" : "feet"
-        },
-        {
-            "type" : "SingleUnit",
-            "data" : "tws",
-            "unit" : "knots"
-        },
-        {
             "type" : "Status"
+        },
+        {
+            "type" : "SingleUnit",
+            "name" : "Depth",
+            "data" : "WaterDepth",
+            "unit" : "Ft"
+        },
+        {
+            "type" : "SingleUnit",
+            "name" : "Speed",
+            "data" : "STW",
+            "unit" : "Kn"
         }
     ]
 }

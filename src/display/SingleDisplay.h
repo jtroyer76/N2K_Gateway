@@ -1,20 +1,18 @@
 #pragma once
 
 #include "Display.h"
-#include <string>
+#include "WString.h"
 
 namespace N2kGateway
 {
-    using std::string;
-
     class SingleDisplay : public Display
     {
-        string name_;
-        string units_;
-        double &value_;
+        const char *_name;
+        const char *_units;
+        const double &_value;
 
     public:
-        SingleDisplay(string name, string units, double &value);
+        SingleDisplay(const char *name, const char *units, const double &value);
         void Show();
         void Update();
     };

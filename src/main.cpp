@@ -32,17 +32,22 @@
 #include "N2kGateway.h"
 #include "functions.h"
 #include "display\SingleDisplay.h"
+#include "display\StatusDisplay.h"
 #include "display\DisplayController.h"
 #include "config\Configuration.h"
 #include "server\Server.h"
+#include "data\Status.h"
 
+using N2kGateway::Configuration;
 using N2kGateway::DisplayController;
 using N2kGateway::SingleDisplay;
-using N2kGateway::Configuration;
+using N2kGateway::StatusDisplay;
+using N2kGateway::Status;
 
-std::unique_ptr<Configuration> config { new Configuration() };
-DisplayController displayController(*config);
-N2kGateway::Server server(*config);
+Configuration *config;
+DisplayController *displayController;
+N2kGateway::Server *server;
+Status gStatus;
 
 //*****************************************************************************
 void setup()
@@ -56,7 +61,8 @@ void setup()
   Serial.begin(115200);
   delay(10);
 
-  if(!LittleFS.begin()){
+  if (!LittleFS.begin())
+  {
     Serial.println("An Error has occurred while mounting LittleFS");
     return;
   }
@@ -79,6 +85,9 @@ void setup()
   Serial.println("");
   Serial.print("AP IP address: ");
   Serial.println(IP);
+  Serial.println(IP.toString());
+  gStatus.IpAddress = IP.toString();
+  Serial.println(gStatus.IpAddress);
 
   // Reserve enough buffer for sending all messages.
   NMEA2000.SetN2kCANMsgBufSize(8);
@@ -106,8 +115,8 @@ void setup()
   );
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
-  //NMEA2000.SetForwardStream(&Serial);
-  //NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
+  // NMEA2000.SetForwardStream(&Serial);
+  // NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
 
   preferences.begin("nvs", false);                         // Open nonvolatile storage (nvs)
   NodeAddress = preferences.getInt("LastNodeAddress", 34); // Read stored last NodeAddress, default 34
@@ -120,16 +129,21 @@ void setup()
 
   NMEA2000.Open();
 
-  displayController.AddDisplay(new SingleDisplay("Depth", "Ft", BoatData.WaterDepth));
-  displayController.AddDisplay(new SingleDisplay("Speed", "Kn", BoatData.STW));
-  displayController.AddDisplay(new SingleDisplay("SOG", "Kn", BoatData.SOG));
-  displayController.Show();
+  config = new Configuration();
+  displayController = new DisplayController(*config, BoatData, gStatus);
+  server = new N2kGateway::Server(*config, gStatus);
 
-  server.Begin();
+  //displayController->AddDisplay(new StatusDisplay(gStatus));
+  // displayController->AddDisplay(new SingleDisplay("Depth", "Ft", BoatData.WaterDepth));
+  // displayController->AddDisplay(new SingleDisplay("Speed", "Kn", BoatData.STW));
+  // displayController->AddDisplay(new SingleDisplay("SOG", "Kn", BoatData.SOG));
+  displayController->Show();
+
+  server->Begin();
 }
 
 void loop()
-{  
+{
   NMEA2000.ParseMessages();
   CheckSourceAddressChange();
 
@@ -145,16 +159,16 @@ void loop()
   {
     t = millis();
 
-    displayController.Update();
+    displayController->Update();
   }
 
   if (M5.BtnA.wasPressed() == true)
   {
-    displayController.PreviousScreen();
+    displayController->PreviousScreen();
   }
 
   if (M5.BtnC.wasPressed() == true)
   {
-    displayController.NextScreen();
+    displayController->NextScreen();
   }
 }

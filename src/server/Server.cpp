@@ -5,16 +5,15 @@
 
 namespace N2kGateway
 {
-    Server::Server(const Configuration &config) : _config(config)
+    Server::Server(const Configuration &config, const Status &status) : _config(config), _status(status)
     {
         _server = new AsyncWebServer(80);
         
         // API get
-        const JsonDocument &doc = _config.Config();
-        _server->on("/api", HTTP_GET, [&doc](AsyncWebServerRequest *request)
+        _server->on("/api", HTTP_GET, [this](AsyncWebServerRequest *request)
         {
             AsyncResponseStream *response = request->beginResponseStream("application/json");
-            serializeJson(doc, *response);
+            serializeJson(_config.Config(), *response);
             request->send(response); 
         });
 
@@ -28,12 +27,19 @@ namespace N2kGateway
         _server->addHandler(handler);
 
         // Routes for web page
-        _server->on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-            request->send(LittleFS, "/index.html", String(), false);
+        _server->on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
+            request->send(LittleFS, "/index.html", "text/html", false, [this](const String& var)
+            {
+                if (var == "IP_ADDRESS")
+                {
+                    return String(_status.IpAddress);
+                }
+                return String();
+            });
         });
 
         _server->on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
-            request->send(LittleFS, "/style.css","text/css");
+            request->send(LittleFS, "/style.css", "text/css");
         });
     }
 

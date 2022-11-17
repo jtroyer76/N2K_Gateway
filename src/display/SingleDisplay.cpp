@@ -38,10 +38,10 @@
 
 namespace N2kGateway
 {
-    SingleDisplay::SingleDisplay(std::string name, std::string units, double &value) : value_(value)
+    SingleDisplay::SingleDisplay(const char *name, const char *units, const double &value) : _value(value)
     {
-        name_ = name;
-        units_ = units;
+        _name = name;
+        _units = units;
     }
 
     void SingleDisplay::Show()
@@ -50,8 +50,8 @@ namespace N2kGateway
         M5.Lcd.clear();
         M5.Lcd.setTextColor(TFT_WHITE);
         M5.Lcd.setFreeFont(FSSB12);
-        M5.Lcd.drawString(name_.c_str(), NAME_X, NAME_Y);
-        M5.Lcd.drawString(units_.c_str(), UNIT_X, UNIT_Y);
+        M5.Lcd.drawString(_name, NAME_X, NAME_Y);
+        M5.Lcd.drawString(_units, UNIT_X, UNIT_Y);
 
         Update();
     }
@@ -61,7 +61,7 @@ namespace N2kGateway
         // Split integer and decimal portions
         char buf[8];
         int num, dec;
-        sprintf(buf, "%.1f", value_);
+        sprintf(buf, "%.1f", _value);
         sscanf(buf, "%d.%d", &num, &dec);
 
         // Use sprite to double buffer to avoid flashing

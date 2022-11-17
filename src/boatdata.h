@@ -6,7 +6,7 @@ struct tBoatData {
   
   double Heading,SOG,COG,STW,Variation,AWS,TWS,MaxAws,MaxTws,AWA,TWA,AWD,TWD,TripLog,Log,RudderPosition,WaterTemperature,
          WaterDepth, GPSTime,// Secs since midnight,
-         Latitude, Longitude, Altitude;
+         Latitude, Longitude, Altitude, None;
   
 public:
   tBoatData() {
@@ -27,11 +27,23 @@ public:
     Log=0;
     RudderPosition=0;
     WaterTemperature=0;
-    WaterDepth=0;
+    WaterDepth=10;
     Variation=0;
     Altitude=0;
     GPSTime=0;
-    DaysSince1970=0;    
+    DaysSince1970=0;
+    None=0;
+  };
+
+  const double& GetValue(const char* byName) const
+  {
+    if(strcmp(byName, "WaterDepth") == 0)
+      return WaterDepth;
+
+    if(strcmp(byName, "STW") == 0)
+      return STW;
+
+    return None;
   };
 };
 

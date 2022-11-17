@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "config/Configuration.h"
+//#include "config/Configuration.h"
 
 // TEST(...)
 // TEST_F(...)
@@ -26,6 +26,11 @@ void loop()
 
   // sleep for 1 sec
   delay(1000);
+}
+
+TEST(FirstSuite, TestOne)
+{
+  ASSERT_TRUE(true);
 }
 
 #else
