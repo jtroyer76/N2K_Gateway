@@ -55,7 +55,6 @@ namespace N2kGateway
 
     void StatusDisplay::Update()
     {
-        Serial.println(_status.IpAddress);
         M5.Lcd.drawString("Wifi:", 10, 50);
         M5.Lcd.drawString(_status.IpAddress, 65, 50);
     }
