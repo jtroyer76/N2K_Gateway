@@ -1,7 +1,7 @@
-#include "boatdata.h"
+#include "data\BoatData.h"
 
 // Boat data
-tBoatData BoatData;
+N2kGateway::BoatData BoatData;
 
 //*****************************************************************************
 void HandleSytemTime(const tN2kMsg & N2kMsg) {

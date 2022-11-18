@@ -43,6 +43,7 @@ using N2kGateway::DisplayController;
 using N2kGateway::SingleDisplay;
 using N2kGateway::StatusDisplay;
 using N2kGateway::Status;
+using N2kGateway::BoatData;
 
 Configuration *config;
 DisplayController *displayController;

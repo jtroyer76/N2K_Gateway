@@ -4,7 +4,7 @@
 
 namespace N2kGateway
 {
-    DisplayController::DisplayController(const Configuration &config, const tBoatData &data, const Status &status)
+    DisplayController::DisplayController(const Configuration &config, const BoatData &data, const Status &status)
         : _currentScreen(0), _config(config), _data(data), _status(status)
     {
         ReLoad();
