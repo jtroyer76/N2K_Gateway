@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
-//#include "config/Configuration.h"
+#include "DisplayConfig.h"
+
+
+using namespace N2kGateway;
 
 // TEST(...)
 // TEST_F(...)
@@ -33,7 +36,10 @@ TEST(FirstSuite, TestOne)
   ASSERT_TRUE(true);
 }
 
+
 #else
+
+
 TEST(FirstSuite, TestOne)
 {
   ASSERT_TRUE(true);

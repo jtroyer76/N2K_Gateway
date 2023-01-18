@@ -2,10 +2,10 @@
 
 namespace N2kGateway
 {
-    class Display
+    class IDisplay
     {
     public:
-        virtual void Show() = 0;
+        virtual void Begin() = 0;
         virtual void Update() = 0;
     };
 }

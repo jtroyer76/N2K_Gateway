@@ -1,11 +1,15 @@
+#ifdef ARDUINO_M5STACK_Core2
+
 #include "StatusDisplay.h"
 
 #include <M5Core2.h>
 
-#include "FreeSansBold90pt7b.h"
-#include "FreeSansBold50pt7b.h"
+#include "Free_Fonts.h"
 
-// Display header locations
+//#include "FreeSansBold90pt7b.h"
+//#include "FreeSansBold50pt7b.h"
+
+// IDisplay header locations
 #define NAME_X 10
 #define NAME_Y 10
 #define UNIT_X 270
@@ -42,7 +46,7 @@ namespace N2kGateway
     {
     }
 
-    void StatusDisplay::Show()
+    void StatusDisplay::Begin()
     {
         // Draw header
         M5.Lcd.clear();
@@ -59,3 +63,4 @@ namespace N2kGateway
         M5.Lcd.drawString(_status.IpAddress, 65, 50);
     }
 }
+#endif

@@ -1,4 +1,4 @@
-#include "data\BoatData.h"
+#include "BoatData.h"
 
 // Boat data
 N2kGateway::BoatData BoatData;

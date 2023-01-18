@@ -1,11 +1,12 @@
+#ifdef ARDUINO_M5STACK_Core2
+
 #pragma once
 
-#include "Display.h"
-#include "WString.h"
+#include "IDisplay.h"
 
 namespace N2kGateway
 {
-    class SingleDisplay : public Display
+    class SingleDisplay : public IDisplay
     {
         const char *_name;
         const char *_units;
@@ -13,7 +14,9 @@ namespace N2kGateway
 
     public:
         SingleDisplay(const char *name, const char *units, const double &value);
-        void Show();
+        void Begin();
         void Update();
     };
 }
+
+#endif
