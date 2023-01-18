@@ -1,11 +1,14 @@
+#ifdef ARDUINO_M5STACK_Core2
+
 #include "SingleDisplay.h"
+#include "esp32-hal-log.h"
 
 #include <M5Core2.h>
 
 #include "FreeSansBold90pt7b.h"
 #include "FreeSansBold50pt7b.h"
 
-// Display header locations
+// IDisplay header locations
 #define NAME_X 10
 #define NAME_Y 10
 #define UNIT_X 270
@@ -44,7 +47,7 @@ namespace N2kGateway
         _units = units;
     }
 
-    void SingleDisplay::Show()
+    void SingleDisplay::Begin()
     {
         // Draw header
         M5.Lcd.clear();
@@ -63,6 +66,9 @@ namespace N2kGateway
         int num, dec;
         sprintf(buf, "%.1f", _value);
         sscanf(buf, "%d.%d", &num, &dec);
+
+        // round up three digit numbers
+        if(num > 99 && dec >= 5) num++;
 
         // Use sprite to double buffer to avoid flashing
         TFT_eSprite read = TFT_eSprite(&M5.Lcd);
@@ -94,3 +100,4 @@ namespace N2kGateway
         read.deleteSprite();
     }
 }
+#endif

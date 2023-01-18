@@ -3,7 +3,7 @@
 #include <ESPAsyncWebServer.h>
 
 #include "config\Configuration.h"
-#include "data\Status.h"
+#include "Status.h"
 
 namespace N2kGateway
 {   

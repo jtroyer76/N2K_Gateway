@@ -31,20 +31,21 @@
 
 #include "N2kGateway.h"
 #include "functions.h"
-#include "display\SingleDisplay.h"
-#include "display\StatusDisplay.h"
-#include "display\DisplayController.h"
+#include "DisplayConfig.h"
+#include "DisplayController.h"
 #include "config\Configuration.h"
 #include "server\Server.h"
-#include "data\Status.h"
+#include "Status.h"
 
 using N2kGateway::Configuration;
-using N2kGateway::DisplayController;
-using N2kGateway::SingleDisplay;
-using N2kGateway::StatusDisplay;
-using N2kGateway::Status;
-using N2kGateway::BoatData;
 
+using N2kGateway::DisplayConfig;
+using N2kGateway::DisplayController;
+
+using N2kGateway::BoatData;
+using N2kGateway::Status;
+
+DisplayConfig *displayConfig;
 Configuration *config;
 DisplayController *displayController;
 N2kGateway::Server *server;
@@ -60,7 +61,7 @@ void setup()
   M5.begin(true, true, true, false);
   // Init USB serial port
   Serial.begin(115200);
-  delay(10);
+  delay(500);
 
   if (!LittleFS.begin())
   {
@@ -69,6 +70,7 @@ void setup()
   }
 
   // Init WiFi connection
+  Serial.println();
   Serial.println("Start WLAN");
   WiFi.begin(ssid, ssidPass);
   WiFi.setHostname("NMEA2000-Gateway");
@@ -87,7 +89,8 @@ void setup()
   Serial.print("AP IP address: ");
   Serial.println(IP);
   Serial.println(IP.toString());
-  gStatus.IpAddress = IP.toString();
+  strcpy(gStatus.IpAddress, IP.toString().c_str());
+  Serial.print("gStatus IP address: ");
   Serial.println(gStatus.IpAddress);
 
   // Reserve enough buffer for sending all messages.
@@ -125,21 +128,24 @@ void setup()
   Serial.printf("NodeAddress=%d\n", NodeAddress);
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
-  NMEA2000.SetMode(tNMEA2000::N2km_ListenOnly, NodeAddress);
+  NMEA2000.SetMode(tNMEA2000::N2km_ListenAndNode, NodeAddress);
   NMEA2000.SetMsgHandler(MyHandleNMEA2000Msg);
 
   NMEA2000.Open();
 
   config = new Configuration();
-  displayController = new DisplayController(*config, BoatData, gStatus);
+
+  displayConfig = new DisplayConfig("/display.cfg");
+  displayConfig->Add(N2kGateway::DisplayConfigItem{
+      N2kGateway::DisplayType::SingleDisplay,
+      N2kGateway::BoatDataType::WaterDepth,
+      "Depth",
+      "Ft",
+  });
+  displayController = new DisplayController(*displayConfig, BoatData, gStatus);
+  displayController->Begin();
+
   server = new N2kGateway::Server(*config, gStatus);
-
-  //displayController->AddDisplay(new StatusDisplay(gStatus));
-  // displayController->AddDisplay(new SingleDisplay("Depth", "Ft", BoatData.WaterDepth));
-  // displayController->AddDisplay(new SingleDisplay("Speed", "Kn", BoatData.STW));
-  // displayController->AddDisplay(new SingleDisplay("SOG", "Kn", BoatData.SOG));
-  displayController->Show();
-
   server->Begin();
 }
 

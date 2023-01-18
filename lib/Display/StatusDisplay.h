@@ -1,17 +1,21 @@
+#ifdef ARDUINO_M5STACK_Core2
+
 #pragma once
 
-#include "Display.h"
-#include "data\Status.h"
+#include "IDisplay.h"
+#include "Status.h"
 
 namespace N2kGateway
 {
-    class StatusDisplay : public Display
+    class StatusDisplay : public IDisplay
     {
         const Status &_status;
 
     public:
         StatusDisplay(const Status &status);
-        void Show();
+        void Begin();
         void Update();
     };
 }
+
+#endif
