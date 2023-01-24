@@ -1,0 +1,7 @@
+{
+    "name": "N2kGateway Display Library",
+    "version": "0.0.1",
+    "build": {
+        "extraScript": "extra_script.py"
+    }
+}

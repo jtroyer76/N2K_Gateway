@@ -54,6 +54,13 @@
         "typeinfo": "cpp",
         "any": "cpp",
         "bitset": "cpp",
-        "*.tpp": "cpp"
+        "*.tpp": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "ratio": "cpp",
+        "regex": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "variant": "cpp"
     }
 }

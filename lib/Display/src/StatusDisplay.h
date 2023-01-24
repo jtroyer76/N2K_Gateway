@@ -1,5 +1,3 @@
-#ifdef ARDUINO_M5STACK_Core2
-
 #pragma once
 
 #include "IDisplay.h"
@@ -17,5 +15,3 @@ namespace N2kGateway
         void Update();
     };
 }
-
-#endif

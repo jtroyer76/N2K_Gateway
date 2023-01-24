@@ -19,7 +19,7 @@ TEST(IDisplay, Load_DisplayConfig_CorrectValues)
     
     auto config = displayConfig.Items()[0];
 
-    EXPECT_EQ(config->Type, DisplayType::SingleDisplay);
-    EXPECT_EQ(config->DataType, BoatDataType::SOG);
-    EXPECT_STREQ(config->Description(), "Speed Over Ground");
+    EXPECT_EQ(config.Type, DisplayType::SingleDisplay);
+    EXPECT_EQ(config.DataType, BoatDataType::SOG);
+    EXPECT_STREQ(config.Description, "Speed Over Ground");
 }

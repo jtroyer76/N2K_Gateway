@@ -1,10 +1,8 @@
-#ifdef ARDUINO_M5STACK_Core2
-
-#include "SingleDisplay.h"
-#include "esp32-hal-log.h"
+#include "Platform.h"
 
 #include <M5Core2.h>
 
+#include "Free_Fonts.h"
 #include "FreeSansBold90pt7b.h"
 #include "FreeSansBold50pt7b.h"
 
@@ -41,34 +39,27 @@
 
 namespace N2kGateway
 {
-    SingleDisplay::SingleDisplay(const char *name, const char *units, const double &value) : _value(value)
-    {
-        _name = name;
-        _units = units;
-    }
-
-    void SingleDisplay::Begin()
+    void Platform::SingleDisplay_Begin(const char *name, const char *units)
     {
         // Draw header
         M5.Lcd.clear();
         M5.Lcd.setTextColor(TFT_WHITE);
         M5.Lcd.setFreeFont(FSSB12);
-        M5.Lcd.drawString(_name, NAME_X, NAME_Y);
-        M5.Lcd.drawString(_units, UNIT_X, UNIT_Y);
-
-        Update();
+        M5.Lcd.drawString(name, NAME_X, NAME_Y);
+        M5.Lcd.drawString(units, UNIT_X, UNIT_Y);
     }
 
-    void SingleDisplay::Update()
+    void Platform::SingleDisplay_Update(const char *name, const char *units, const double &value)
     {
         // Split integer and decimal portions
         char buf[8];
         int num, dec;
-        sprintf(buf, "%.1f", _value);
+        sprintf(buf, "%.1f", value);
         sscanf(buf, "%d.%d", &num, &dec);
 
         // round up three digit numbers
-        if(num > 99 && dec >= 5) num++;
+        if (num > 99 && dec >= 5)
+            num++;
 
         // Use sprite to double buffer to avoid flashing
         TFT_eSprite read = TFT_eSprite(&M5.Lcd);
@@ -99,5 +90,19 @@ namespace N2kGateway
         read.pushSprite(CANVAS_X, CANVAS_Y);
         read.deleteSprite();
     }
+
+    void Platform::StatusDisplay_Begin()
+    {
+        // Draw header
+        M5.Lcd.clear();
+        M5.Lcd.setTextColor(TFT_WHITE);
+        M5.Lcd.setFreeFont(FSSB12);
+        M5.Lcd.drawString("Status", NAME_X, NAME_Y);
+    }
+
+    void Platform::StatusDisplay_Update(const Status &status)
+    {
+        M5.Lcd.drawString("Wifi:", 10, 50);
+        M5.Lcd.drawString(status.IpAddress, 65, 50);
+    }
 }
-#endif

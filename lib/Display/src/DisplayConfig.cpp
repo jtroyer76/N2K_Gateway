@@ -1,7 +1,6 @@
 #include "DisplayConfig.h"
 
-#include "esp32-hal-log.h"
-#include "LittleFS.h"
+#include "HalFs.h"
 
 namespace N2kGateway
 {
@@ -19,7 +18,7 @@ namespace N2kGateway
 
     void DisplayConfig::Load()
     {
-        if (!LittleFS.exists(_fileName))
+        if (!Hal::FsExists(_fileName))
         {
             LoadDefaults();
             return;
@@ -27,14 +26,13 @@ namespace N2kGateway
 
         Clear();
 
-        // ifstream fin(_fileName, ios::in | ios::binary);
-        auto fin = LittleFS.open(_fileName);
+        auto fin = Hal::FsOpen(_fileName, "r", false);
         DisplayConfigItem item = DisplayConfigItem();
-        while (fin.read((uint8_t *)&item, sizeof(DisplayConfigItem)))
+        while (fin->Read((uint8_t *)&item, sizeof(DisplayConfigItem)))
         {
             _configs.push_back(item);
         }
-        fin.close();
+        fin->Close();
     }
 
     void DisplayConfig::LoadDefaults()
@@ -48,12 +46,12 @@ namespace N2kGateway
 
     void DisplayConfig::Save(bool create)
     {
-        auto fout = LittleFS.open(_fileName, "w+", create);
+        auto fout = Hal::FsOpen(_fileName, "w+", create);
         for (DisplayConfigItem config : _configs)
         {
-            fout.write((uint8_t *)&config, sizeof(DisplayConfigItem));
+            fout->Write((uint8_t *)&config, sizeof(DisplayConfigItem));
         }
-        fout.close();
+        fout->Close();
     }
 
     void DisplayConfig::Add(DisplayConfigItem config)

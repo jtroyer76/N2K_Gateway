@@ -1,5 +1,8 @@
 #include "DisplayController.h"
-#include "DisplayFactory.h"
+#include "SingleDisplay.h"
+#include "StatusDisplay.h"
+
+#include "Platform.h"
 
 #include "esp32-hal-log.h"
 
@@ -13,9 +16,16 @@ namespace N2kGateway
 
     void DisplayController::ReLoad()
     {
-        for (auto &display : _config.Items())
+        for (auto &config : _config.Items())
         {
-            AddDisplay(DisplayFactory::GetDisplay(display, _data, _status));
+            switch (config.Type)
+            {
+            case DisplayType::SingleDisplay:
+                AddDisplay(new SingleDisplay(config.Description, config.Units, _data.GetValue(config.DataType)));
+
+            case DisplayType::Status:
+                AddDisplay(new StatusDisplay(_status));
+            }
         }
         log_d("Loaded %d configs", _config.Items().size());
     }
